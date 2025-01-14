@@ -1,0 +1,11 @@
+include react_flickity_carousel/react_flickity_carousel.min.js
+include react_flickity_carousel/react_flickity_carousel.min.js.map
+include react_flickity_carousel/async-*.js
+include react_flickity_carousel/async-*.js.map
+include react_flickity_carousel/*-shared.js
+include react_flickity_carousel/*-shared.js.map
+include react_flickity_carousel/metadata.json
+include react_flickity_carousel/package-info.json
+include README.md
+include LICENSE
+include package.json
