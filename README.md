@@ -1,4 +1,4 @@
-# Dash Component Boilerplate
+# Dash React UI Library
 
 This repository contains a [Cookiecutter](https://github.com/audreyr/cookiecutter) template to create your own Dash components.
 
