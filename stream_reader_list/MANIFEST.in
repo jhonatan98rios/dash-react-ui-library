@@ -1,0 +1,11 @@
+include stream_reader_list/stream_reader_list.min.js
+include stream_reader_list/stream_reader_list.min.js.map
+include stream_reader_list/async-*.js
+include stream_reader_list/async-*.js.map
+include stream_reader_list/*-shared.js
+include stream_reader_list/*-shared.js.map
+include stream_reader_list/metadata.json
+include stream_reader_list/package-info.json
+include README.md
+include LICENSE
+include package.json
