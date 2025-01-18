@@ -1,22 +1,25 @@
-import stream_reader_list
+from stream_reader_list import StreamReaderList as Stream
 from dash import Dash, callback, html, Input, Output
 
 app = Dash(__name__)
 
 app.layout = html.Div([
-    stream_reader_list.StreamReaderList(
-        id='input',
-        value='my-value',
-        label='my-label'
+    Stream(
+        value=0,
+        id='stream',
+        url='http://localhost:8000/stream-csv',
+        style={ 'height': "300px", 'overflowY': "scroll", 'border': '1px solid #ccc' }
     ),
-    html.Div(id='output')
+    html.Div(id="total_rows")
 ])
 
 
-@callback(Output('output', 'children'), Input('input', 'value'))
-def display_output(value):
-    return 'You have entered {}'.format(value)
-
+@callback(
+    Output("total_rows", "children"),
+    Input("stream", "value")
+)
+def update_total_rows(value):
+    return f"Numero de linhas: {value}"
 
 if __name__ == '__main__':
     app.run(debug=True)

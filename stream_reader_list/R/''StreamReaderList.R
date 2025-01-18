@@ -1,9 +1,9 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 #' @export
-''StreamReaderList <- function(id=NULL, label=NULL, value=NULL) {
+''StreamReaderList <- function(id=NULL, style=NULL, url=NULL, value=NULL) {
     
-    props <- list(id=id, label=label, value=value)
+    props <- list(id=id, style=style, url=url, value=value)
     if (length(props) > 0) {
         props <- props[!vapply(props, is.null, logical(1))]
     }
@@ -11,7 +11,7 @@
         props = props,
         type = 'StreamReaderList',
         namespace = 'stream_reader_list',
-        propNames = c('id', 'label', 'value'),
+        propNames = c('id', 'style', 'url', 'value'),
         package = 'streamReaderList'
         )
 
