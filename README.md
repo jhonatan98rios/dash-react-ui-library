@@ -1,17 +1,10 @@
-# Dash Component Boilerplate
+# Dash React UI Library
 
 This repository contains a [Cookiecutter](https://github.com/audreyr/cookiecutter) template to create your own Dash components.
 
 - New to Dash? Check out the [official Dash Documentations](https://dash.plotly.com)
 - If it's the first time creating a Dash component, start with our [React guide for Python developers](https://dash.plotly.com/react-for-python-developers)
 - Need help with your component? Create a post on the [Dash Community Forum](https://community.plotly.com/c/dash)
-
-<div align="center">
-  <a href="https://dash.plotly.com/project-maintenance">
-    <img src="https://dash.plotly.com/assets/images/maintained-by-plotly.png" width="400px" alt="Maintained by Plotly">
-  </a>
-</div>
-
 
 ## Usage
 
