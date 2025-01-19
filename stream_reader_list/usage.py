@@ -8,7 +8,7 @@ app.layout = html.Div([
         value=0,
         id='stream',
         url='http://localhost:8000/stream-csv',
-        style={ 'height': "300px", 'overflowY': "scroll", 'border': '1px solid #ccc' }
+        style={ 'height': "500px", 'overflowY': "scroll", 'border': '1px solid #ccc' }
     ),
     html.Div(id="total_rows")
 ])
