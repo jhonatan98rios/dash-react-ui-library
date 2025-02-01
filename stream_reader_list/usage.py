@@ -8,7 +8,16 @@ app.layout = html.Div([
         value=0,
         id='stream',
         url='http://localhost:8000/stream-csv',
-        style={ 'height': "500px", 'overflowY': "scroll", 'border': '1px solid #ccc' }
+        style={ 
+            'height': '500px',
+            'width': '100%',
+            'max-width': '100vw',
+            'overflow-y': 'scroll',
+            'overflow-x': "clip",
+            'border': '1px solid #ccc',
+            "display": "flex",
+            "flex-wrap": "wrap",
+        }
     ),
     html.Div(id="total_rows")
 ])
@@ -19,7 +28,7 @@ app.layout = html.Div([
     Input("stream", "value")
 )
 def update_total_rows(value):
-    return f"Numero de linhas: {value}"
+    return f"Number of rows: {value}"
 
 if __name__ == '__main__':
     app.run(debug=True)
