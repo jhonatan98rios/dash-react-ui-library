@@ -1,83 +1,103 @@
-import React, { useState, useEffect, useReducer, useRef } from 'react';
-import PropTypes from 'prop-types';
-import { csvReducer, initialState } from '../utils/reducer'
+import React, { useEffect, useRef } from 'react'
+import ReactDOM from "react-dom"
+import PropTypes from 'prop-types'
+
+function MovieCard({ movie }) {
+    return (
+        <div id={movie.title.toLowerCase().replaceAll(" ", "_")} style={{ border: "1px solid black", margin: "8px", padding: "8px", width: "calc(50vw - 64px)" }}>
+            <h2>{movie.title}</h2>
+            <p style={{ width: "100%" }}>Companies: {movie.production_companies}</p>
+            <p style={{ width: "100%" }}>Genres: {movie.genres}</p>
+            <p style={{ width: "100%" }}>Relase Date: {movie.release_date}</p>
+            <p style={{ width: "100%" }}>Original Language: {movie.original_language} </p>
+            <p style={{ width: "100%" }}>Available Languages: {movie.spoken_languages} </p>
+        </div>
+    )
+}
 
 const StreamReaderList = ({ id, setProps, url, style }) => {
 
-    const [state, dispatch] = useReducer(csvReducer, initialState);
-    const frame = useRef(null);
+    const containerRef = useRef(null)
+    const counterRef = useRef(0)
 
-    const fetchData = async () => {
-        try {
-            const response = await fetch(url);
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder("utf-8");
-            
-            requestAnimationFrame(() => fetchNextChunk(reader, decoder));
+    useEffect(() => {
+        let reader
+        let buffer = ""
+        let isReading = true
 
-        } catch (error) {
-            console.error("Error fetching CSV data:", error);
-        }
-    };
+        const processChunk = async () => {
+            if (!isReading) return
 
-    function fetchNextChunk(reader, decoder) {
-        reader.read()
-            .then(({ value, done }) => {
-                if (value && !done) {
-                    const rows = decoder
-                        .decode(value)
-                        .split("\n")
-                        .filter((row) => row.trim() !== "")
-                    dispatch({ type: "ADD_ROWS", payload: rows });
-                    setInterval(() => fetchNextChunk(reader, decoder), 2000);
+            try {
+                const { value, done } = await reader.read()
+                if (done) {
+                    isReading = false
+                    return
                 }
-            });
-    }
 
-    useEffect(() => {
-        fetchData();
-        () => frame.current = null;
-    }, []);
+                const decoder = new TextDecoder()
+                buffer += decoder.decode(value, { stream: true })
 
-    useEffect(() => {
-        setProps({ value: state.totalRows })
-    }, [state.totalRows]);
+                const parts = buffer.split("\n")
+                buffer = parts.pop() // Store uncompleted data
+
+                parts.forEach((jsonString) => {
+                    try {
+                        const movieData = JSON.parse(jsonString)
+                        const container = containerRef.current
+                        if (container) {
+                            const wrapper = document.createElement("div")
+                            container.appendChild(wrapper)
+                            ReactDOM.render(<MovieCard movie={movieData} />, wrapper)
+
+                            counterRef.current += 1
+                        }
+                    } catch (error) {
+                        console.error("Error while parsing JSON:", error)
+                    }
+                })
+
+                requestAnimationFrame(processChunk)
+            } catch (error) {
+                console.error("Error while consuming stream:", error)
+            }
+        }
+
+        const startStream = async () => {
+            try {
+                const response = await fetch(url)
+                reader = response.body.getReader()
+                requestAnimationFrame(processChunk)
+            } catch (error) {
+                console.error("Error while initializing stream:", error)
+            }
+        }
+
+        const updateCounter = () => {
+            setProps({
+                value: counterRef.current
+            })
+
+            setTimeout(updateCounter, 500)
+        }
+
+        startStream()
+        updateCounter()
+
+        return () => {
+            isReading = false
+        }
+    }, [])
 
     return (
-        <div style={style} id={id}>
-            {!state.data && <p>Loading...</p>}
-            <ul style={{ listStyle: 'none' }}>
-                {state.data.map((row, index) => {
-                    
-                    try {
-                        const obj = JSON.parse(row.replace(/'/g, '"'))
-                        return (
-                            <li 
-                                key={index} 
-                                style={{ 
-                                    width: '80%', 
-                                    minHeight: '48px', 
-                                    margin: '12px auto', 
-                                    padding: '12px 24px', 
-                                    boxShadow: '1px 1px 4px rgba(0, 0, 0, 0.2)', 
-                                    background: '#fff',
-                                    borderRadius: '12px'
-                                }}>
-                                <p style={{ margin: '0px'}}> {obj.title} </p>
-                                <p style={{ margin: '0px'}}> {obj.production_companies} </p>
-                                <p style={{ margin: '0px'}}> {obj.genres} </p>
-                            </li>
-                        )
-                    } catch (err) {
-                        return <></>
-                    }
-                })}
-            </ul>
+        <div id={id}>
+            <h1>Realtime Movies</h1>
+            <div ref={containerRef} style={style} />
         </div>
-    );
+    )
 }
 
-StreamReaderList.defaultProps = {};
+StreamReaderList.defaultProps = {}
 
 StreamReaderList.propTypes = {
     /**
@@ -105,6 +125,6 @@ StreamReaderList.propTypes = {
      * The value used on the counter.
      */
     value: PropTypes.number
-};
+}
 
-export default StreamReaderList;
+export default StreamReaderList
