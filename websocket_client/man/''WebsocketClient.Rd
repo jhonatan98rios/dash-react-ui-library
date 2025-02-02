@@ -10,15 +10,15 @@ ExampleComponent is an example component. It takes a property, `label`, and di
 }
 
 \usage{
-''WebsocketClient(id=NULL, label=NULL, value=NULL)
+''WebsocketClient(id=NULL, url=NULL, value=NULL)
 }
 
 \arguments{
 \item{id}{Character. The ID used to identify this component in Dash callbacks.}
 
-\item{label}{Character. A label that will be printed when this component is rendered.}
+\item{url}{Character. A url connection that will be used to create the socket.}
 
-\item{value}{Character. The value displayed in the input.}
+\item{value}{Unnamed list. The value displayed in the input.}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}
